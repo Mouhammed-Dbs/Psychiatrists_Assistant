@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Psychiatrists Assistant</title>
+  <style>
+    body {
+      margin-top: 5%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    main {
+      background-color: #2C3E50;
+      width: 625px;
+      text-align: center;
+      border: black solid 1px;
+      border-radius: 7px 7px 7px 7px;
+    }
+
+    .container {
+      display: flex;
+      justify-content: space-between;
+      align-items: start;
+      padding: 10px;
+      height: 350px;
+    }
+
+    .col-left {
+      width: 290px;
+      text-align: left;
+    }
+
+    .col-right {
+      width: 290px;
+      margin-left: 25px;
+    }
+
+    h2 {
+      margin: 0px;
+      padding: 0px;
+      padding-bottom: 7px;
+      color: #ffffff;
+      border-bottom: #fff 2px dotted;
+    }
+
+    label {
+      margin: 5px;
+      font-size: 17px;
+      color: #ffffff;
+    }
+
+    ul {
+      padding-right: 5px;
+      scroll-behavior: smooth;
+      overflow-y: scroll;
+      max-height: 300px;
+      width: 100%;
+      padding-inline-start: 0px;
+    }
+
+    li {
+      background-color: #fff;
+      border: 1px rgb(236, 236, 236) solid;
+      border-radius: 4px;
+      padding: 7px;
+      margin-top: 7px;
+    }
+
+    p {
+      width: 100%;
+      text-align: left;
+      direction: ltr;
+      margin: 2px;
+    }
+
+    input[type=range] {
+      height: 8px;
+      margin: 0px;
+      padding: 0px;
+      width: 75%;
+      margin-top: 10px;
+    }
+
+    /*  Send Button  */
+
+    .send {
+      height: 35px;
+      color: #ffffff;
+      font-size: 15px;
+      font-weight: bold;
+      width: 280px;
+      border-radius: 7px;
+      background-color: #C0392B;
+    }
+
+    .send:hover {
+      background-color: #CD6155;
+    }
+
+    /*  Selected Items List  */
+
+    .btn-close {
+      padding: 0;
+      border-radius: 15px;
+      width: 25.5px;
+      height: 25.5px;
+      border: 0.2px solid rgb(63, 63, 63);
+    }
+
+    .btn-close:hover {
+      background-color: #646363;
+      transform: scale(1.1);
+    }
+
+    img {
+      margin-top: 1px;
+      width: 22px;
+      height: 22px;
+    }
+
+    ul::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    ul::-webkit-scrollbar-track {
+      display: none;
+    }
+
+    ul::-webkit-scrollbar-thumb {
+      background-color: #aaa;
+      border-radius: 5px;
+    }
+
+    ul::-webkit-scrollbar-thumb:hover {
+      background-color: #646363;
+    }
+    
+
+    /*  Box Question  */
+
+    .box-questions {
+      margin: 5px;
+      display: flex;
+      justify-content: flex-start;
+      flex-direction: column;
+      height: 240px;
+      align-items: center;
+    }
+
+    #div-ques {
+      display: none;
+    }
+
+    .btn {
+      width: 38px;
+      height: 28px;
+      border-radius: 7px;
+      padding: 5px;
+      color: white;
+    }
+
+    /*  Dropdown Menu  */
+
+    .dropdown {
+      margin: 5px;
+      text-align: left;
+      width: 280px;
+      position: relative;
+      display: inline-block;
+    }
+
+    .dropdown-input {
+      margin-top: 5px;
+      padding: 5px;
+      border: 1px solid #ccc;
+      width: 268px;
+      font-size: 16px;
+      border-radius: 5px;
+      outline: none;
+    }
+
+    .dropdown-menu {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      z-index: 999;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-top: none;
+      width: 260px;
+      max-height: 200px;
+      overflow-y: auto;
+      padding: 7px;
+      margin: 0;
+      display: none;
+    }
+
+    .dropdown-menu li {
+      text-align: left;
+      direction: ltr;
+      list-style-type: none;
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    .dropdown-menu li:hover {
+      background-color: #ccc;
+    }
+
+    /*  Alert  */
+
+    .alert {
+      display: none;
+      padding: 7px;
+      margin: 7px;
+      background-color: #ddd;
+      color: white;
+      border-radius: 5px;
+    }
+
+    .alert.error {
+      background-color: #C0392B;
+    }
+
+    .alert.output {
+      background-color: #ff9800;
+    }
+
+    .closebtn {
+      margin-left: 15px;
+      color: white;
+      font-weight: bold;
+      float: left;
+      font-size: 22px;
+      line-height: 20px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+  </style>
+</head>
+
+<body>
+  <main>
+
+    <div class="container">
+      <div class="col-left">
+        <div class="dropdown">
+          <label>Add Symptoms Manually</label>
+          <input type="text" id="dropdown-input" class="dropdown-input" placeholder="Enter a symptom">
+          <ul id="dropdown-menu" class="dropdown-menu">
+          </ul>
+        </div>
+        <div class="box-questions">
+          <label style="width: 100%;">Suggested Questions:</label>
+          <button id="btn-update" class="btn"
+            style="background-color: #332d2c; width: fit-content; margin-top: 20px;">Update Question ></button>
+          <div id="div-ques">
+            <p id="ques" style="direction: ltr; text-align: center; color: #fff; padding: 20px; width: 232px;">Does the
+              patiant have sleeping difficulties?</p>
+            <div style="display: flex; justify-content: space-evenly; width: 100%;">
+              <button id="btn_y" class="btn" style="background-color: #332d2c;">Yes</button>
+              <button id="btn_n" class="btn" style="background-color: #332d2c;">No</button>
+            </div>
+          </div>
+        </div>
+        <button id="send" class="send">Send</button>
+      </div>
+      <div class="col-right">
+        <h2>Identified Symptoms List</h2>
+        <ul id="selected-items">
+        </ul>
+        <p id="des" style="direction: ltr; text-align: center; color: #fff; margin-top: 145px;">Add symptoms from the
+          list or using the description box..</p>
+      </div>
+    </div>
+    <div id="alert" class="alert">
+      <span id="alert-close" class="closebtn">&times;</span>
+    </div>
+  </main>
+
+  <script src="../static/jquery-2.1.1.min.js"></script>
+  <script>
+    const items = [];
+    var selectedSymptoms = []
+    var notSelectedQues = []
+    var questions = []
+    var dropdownInput = $('#dropdown-input')
+    var dropdownMenu = $('#dropdown-menu')
+    var dropdownMenuItems = dropdownMenu.find('li');
+    var alert = document.getElementById('alert')
+    var inputsRange = []
+
+    readData();
+    document.addEventListener('click', function (event) {
+      if (!event.target.closest('.dropdown')) {
+        dropdownMenu.css('display', 'none');
+      }
+    });
+
+    $(document).ready(() => {
+      $('#send').click(() => {
+        if (selectedSymptoms.length > 0) {
+          $.ajax({
+            type: 'POST',
+            url: 'http://127.0.0.1:5000/send',
+            contentType: 'application/json;charset=UTF-8',
+            data: JSON.stringify(selectedSymptoms),
+            success: (response) => {
+              if (response == '') {
+                showAlert('Not Found', true);
+              } else {
+                showAlert(response, true);
+              }
+            },
+            error: (jqXHR, textStatus, errorThrown) => {
+              showAlert(textStatus, false);
+            }
+          });
+        } else {
+          showAlert('Please select symptoms', false);
+        }
+      });
+
+      $('#btn-update').click(() => {
+        updateQues();
+      });
+
+      $('#btn_y').click(() => {
+        items.forEach(element => {
+          if ($('#ques').html().includes(element.Symptoms)) {
+            addSelectedItem(element.Symptoms);
+            console.log(element.Symptoms);
+          }
+        });
+        $('#div-ques').css('display', 'none');
+      });
+
+      $('#btn_n').click(() => {
+        notSelectedQues.push($('#ques').html());
+        questions.shift();
+        $('#ques').html(questions[0]);
+        console.log(notSelectedQues)
+      });
+
+      dropdownInput.click(() => {
+        dropdownMenuItems = dropdownMenu.find('li');
+        dropdownMenu.css('display', 'block');
+        for (var i = 0; i < dropdownMenuItems.length; i++) {
+          dropdownMenuItem = $(dropdownMenuItems[i]);
+          if (isSelected(selectedSymptoms, dropdownMenuItem.html()) < 0) {
+            dropdownMenuItem.css('display','list-item');
+          } else {
+            dropdownMenuItem.css('display','none');
+          }
+        }
+      });
+
+      dropdownInput.on('input', () => {
+        var filter = dropdownInput.val().toUpperCase();
+        dropdownMenuItems = dropdownMenu.find('li');
+        for (var i = 0; i < dropdownMenuItems.length; i++) {
+          dropdownMenuItem = $(dropdownMenuItems[i]);
+          if (dropdownMenuItem.html().toUpperCase().indexOf(filter) > -1 && isSelected(selectedSymptoms, dropdownMenuItem.html()) < 0) {
+            dropdownMenuItem.css('display','list-item');
+          } else {
+            dropdownMenuItem.css('display','none');
+          }
+        }
+      });
+
+      dropdownMenu.click(() => {
+        if (event.target.tagName === 'LI') {
+          $('#des').css('display', 'none');
+          addSelectedItem(event.target.innerHTML);
+          dropdownMenu.css('display', 'none');
+          dropdownInput.val('');
+          console.log(selectedSymptoms);
+        }
+      });
+
+      $('#selected-items').click(() => {
+        if (event.target.id == 'delete') {
+          let pSymptom = event.target.parentNode.parentNode.parentNode.children[0].children[1];
+          if (isSelected(selectedSymptoms, pSymptom.innerHTML) >= 0) {
+            const indexToDelete = isSelected(selectedSymptoms, pSymptom.innerHTML);
+            if (indexToDelete !== -1) {
+              selectedSymptoms.splice(indexToDelete, 1);
+              event.target.parentNode.parentNode.parentNode.remove();
+            }
+          }
+          if (selectedSymptoms.length == 0) {
+            $('#des').css('display', 'block');
+          }
+          console.log(selectedSymptoms);
+        }
+      });
+
+      $('#alert-close').click(() => {
+        $('#alert').css('display', 'none')
+      });
+
+    });
+
+
+    function readData() {
+
+      fetch('/static/data_en.csv')
+        .then(res => res.text())
+        .then(data => {
+          const rows = data.split('\n');
+          const headers = rows[0].split(',');
+
+          for (let i = 1; i < rows.length - 1; i++) {
+            const values = rows[i].split(',');
+            const item = {};
+
+            for (let j = 0; j < headers.length; j++) {
+              item[headers[j]] = values[j];
+            }
+            items.push(item);
+          }
+          items.forEach(element => {
+            var li = document.createElement('li');
+            li.innerHTML = element.Symptoms;
+            dropdownMenu.append(li); //Add Child
+          });
+        })
+
+    }
+
+    function createItem(value) {
+      var li = document.createElement('li');
+      var div = document.createElement('div');
+      var button = document.createElement('button');
+      var p = document.createElement('p');
+      var range = document.createElement('input');
+
+      div.style.display = 'flex';
+      div.style.justifyContent = 'space-between';
+      button.innerHTML = '<img id="delete" src="/static/delete.ico">';
+      button.className = 'btn-close'
+      p.innerHTML = value;
+      p.style = 'padding-left:9px;';
+      range.type = 'range';
+      range.min = 15
+      range.max = 100
+      range.value = 15
+      range.oninput = 'rangevalue.value=value';
+      range.addEventListener('input', handleInputChange);
+      div.appendChild(button);
+      div.appendChild(p);
+      li.appendChild(div);
+      li.appendChild(range);
+      return li;
+    }
+
+    function addSelectedItem(symptom) {
+      var ob = {
+        'symptom': symptom,
+        'value': 0.3
+      }
+      selectedSymptoms.push(ob)
+      var selectedItem = createItem(symptom)
+      $('#selected-items').prepend(selectedItem);
+    }
+
+    function handleInputChange(e) {
+      let target = e.target
+
+      const min = target.min
+      const max = target.max
+      const val = target.value / 100
+
+      const symptom = e.target.parentNode.children[0].children[1].innerHTML
+      selectedSymptoms.forEach(element => {
+        if (element.symptom == symptom) {
+          element.value = val;
+        }
+      });
+    }
+
+    function isSelected(arr, symptom) {
+      let c = -1;
+      for (let i = 0; i < arr.length; i++) {
+        if (arr[i].symptom == symptom)
+          c = i;
+      }
+      return c;
+    }
+
+    function showAlert(text, type) {
+      if (alert.children.length > 1) {
+        alert.children[1].remove();
+      }
+      if (type) {
+        alert.className = 'alert output';
+      } else {
+        alert.className = 'alert error';
+      }
+      var content = document.createElement('p');
+      content.innerText = text;
+      content.style.textAlign = 'center';
+      alert.appendChild(content);
+      alert.style.display = 'block';
+    }
+
+    function updateQues() {
+      if (selectedSymptoms.length > 0) {
+        $.ajax({
+          type: 'POST',
+          url: 'http://127.0.0.1:5000/ques',
+          contentType: 'application/json;charset=UTF-8',
+          data: JSON.stringify({ 'selected': selectedSymptoms, 'list_ques': notSelectedQues }),
+          success: (response) => {
+            var subres = response.split('#');
+            questions = subres[0].split('_');
+            if (subres[1].length > 3)
+              notSelectedQues = subres[1].split('_');
+            $('#ques').html(questions[0]);
+            $('#div-ques').css('display', 'block');
+          },
+          error: (jqXHR, textStatus, errorThrown) => {
+            showAlert(textStatus, false);
+          }
+        });
+      } else {
+        showAlert('Please select symptoms', false);
+      }
+    }
+  </script>
+</body>
+
+</html>
